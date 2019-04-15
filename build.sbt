@@ -9,7 +9,7 @@ val TYPESAFE_CONFIG_VERSION = "1.3.3"
 val SCALA_TEST_VERSION = "3.0.5"
 
 libraryDependencies ++= Seq(
-  "org.apache.spark" %% "spark-sql" % SPARK_VERSION,
+  "org.apache.spark" %% "spark-sql" % SPARK_VERSION ,
   "org.apache.spark" %% "spark-core" % SPARK_VERSION,
   "org.scalatest" %% "scalatest" % SCALA_TEST_VERSION % "test"
 )
