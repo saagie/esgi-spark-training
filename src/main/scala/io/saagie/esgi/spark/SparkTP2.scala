@@ -19,6 +19,8 @@ object SparkTP2 {
 
     println(totalLength)
 
+    //TODO : Write your code here
+
     //Sleep to give time to browse Spark UI
     Thread.sleep(300000)
   }
