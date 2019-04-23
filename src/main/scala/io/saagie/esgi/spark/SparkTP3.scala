@@ -5,8 +5,6 @@ import org.apache.spark.sql.functions._
 
 object SparkTP3 {
 
-  case class BabyName(Year: Int, FirstName: String, County: String, Sex: String, Count: Int)
-
   def main(args: Array[String]) {
 
     val spark = SparkSession.builder()
