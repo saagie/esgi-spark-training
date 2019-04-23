@@ -2,30 +2,29 @@ package io.saagie.esgi.spark
 
 import org.apache.spark.sql.SparkSession
 
+import scala.util.matching.Regex
+
 object SparkTP2bis {
 
-  case class log(ip:String,client:String,useriId:String,datetime:String,method:String,endpoint:String,protocol:String,responseCode:String,contentSize:Int);
-  val logRegex = """^(\S+) (\S+) (\S+) \[([\w:/]+\s[+\-]\d{4})\] "(\S+) (\S+) (\S+)" (\d{3}) (\d+)""".r
+  val logRegex: Regex = """^(\S+) - - \[(\S+):(\S+):(\S+):(\S+) -\S+] "(\S+) (\S+) (\S+)\/\S+ (\S+) (\S+)""".r // Regex pattern to parse the log
+  case class log(ip: String, date: String, hour: Int, min: Int, sec: Int, methodType: String, uri: String, protocol: String, response: Int, size: Int)
 
 
-  def parseLog(line: String):log = {
-    val logRegex(ip,client,userId,datetime,method,endpoint,protocol,responseCode,contentSize) = line
-    return log(ip,client,userId,datetime,method,endpoint,protocol,responseCode,contentSize.toInt)
+  // Function to assert if a String has integer and if not return 0 by default.
+  def assertInt(variable: String): Int = {
+    if (variable.forall(_.isDigit)) {
+      variable.toInt
+    } else {
+      0
+    }
+  }
+
+  def parseLog(line: String): log = {
+    val logRegex(ip, date, hour, min, sec, methodType, uri, protocol, response, size) = line
+    log(ip, date, hour.toInt, min.toInt, sec.toInt, methodType, uri, protocol, response.toInt, assertInt(size))
   }
 
   def main(args: Array[String]) {
-
-    val spark = SparkSession.builder()
-      .appName(getClass.getSimpleName)
-      .getOrCreate()
-
-
-    val logs = spark.sparkContext.textFile("/tmp/tp2-logs.txt",20)
-    val parsedLogs = logs.flatMap(l => l.split(" "))
-    parsedLogs.foreach(println(_))
-
-    val logss = logs.filter(line=>line.matches(logRegex.toString)).map(line=>parseLog(line));
-    logss.foreach(println(_))
 
 
     //Sleep to give time to browse Spark UI
